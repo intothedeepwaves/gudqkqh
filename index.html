@@ -437,7 +437,7 @@ font-size:38px;font-weight:900;color:#ff5c8a;letter-spacing:.5px;margin-bottom:8
 <h3>리뷰 작성하기</h3>
 <div class="field">
 <label>닉네임</label>
-<input type="text" id="inputName" placeholder="예: 형성애자**">
+<input type="text" id="inputName" placeholder="예: 도훈아사랑해">
 </div>
 <div class="field">
 <label>평점</label>
@@ -510,8 +510,8 @@ font-size:38px;font-weight:900;color:#ff5c8a;letter-spacing:.5px;margin-bottom:8
 모든 표시 텍스트/데이터는 이 STORE 객체 안에서 수정하면 됩니다.
 ================================================================= */
 const STORE = {
-name: "도훈이네",
-category: "탄광",
+name: "러쀼 하우스",
+category: "신혼집",
 
 // 홈 화면 상단 사진 (원하는 이미지 URL로 교체)
 photos: [
@@ -521,16 +521,16 @@ photos: [
 ],
 
 address: "정환 씨 나 또 왔어요",
-addressSub: "아 사랑인가에서 486 m",
+addressSub: "아 사랑인가에서 910 m",
 hours: "연중무휴",
-phone: "010-2026-0911",
+phone: "010-2026-0910",
 website: "https://www.8trash.co.kr",
 
 // "전화" 버튼을 누르면 이동할 링크 (원하는 유튜브 영상 주소로 교체 가능)
 callButtonLink: "https://youtu.be/_P9ty76m5FU?si=0x2_8Te1W9SkOKs_",
 
 // "도착" 버튼을 누르면 보여줄 커플 디데이 기준일 (사귀기 시작한 날짜, YYYY-MM-DD)
-coupleStartDate: "2026-09-11",
+coupleStartDate: "2026-09-10",
 
 // "출발" 버튼을 누르면 보여줄 고정 이미지 (원하는 이미지 URL로 교체)
 departureImage: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FRpYzM%2FdJMcaidwXw0%2FAAAAAAAAAAAAAAAAAAAAAGLq9ifKAP9nOtVQ9-xAhVPVTKPe_fVTcCN1I0h2OE1v%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1788188399%26allow_ip%3D%26allow_referer%3D%26signature%3DNjJ%252FRsARqoFGhUfsabLotVqKndY%253D",
@@ -539,28 +539,27 @@ departureImage: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=h
 notifyImage: "https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2FVylR3%2FdJMcabMgaHB%2FAAAAAAAAAAAAAAAAAAAAADUnuz4-l_8kKCEjDDgWictk1rfK9qTlwsx42nJs1oE8%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1788188399%26allow_ip%3D%26allow_referer%3D%26signature%3DMcLOo0zuWHrCV9dyTwbnx6TpIt8%253D",
 
 menu: [
-{ name: "아이스 아메리카노", desc: "대표 메뉴", price: "2,000원" },
-{ name: "헤랴 밥상", desc: "", price: "50,000원" },
-{ name: "헤랴 디저트", desc: "", price: "75,000원" },
-{ name: "담타", desc: "", price: "1,800원" }
+{ name: "도훈이 사랑", desc: "대표 메뉴", price: "228 point" },
+{ name: "콕 찌르기", desc: "", price: "908 point" },
+{ name: "애고비", desc: "", price: "75,000원" },
 ],
 
 newsTitle: "소식",
-newsText: "이 집은 자유롭게 담타가 가능한 곳입니다 담배 필수 지참!! 🚬🚬",
+newsText: "100 일 축하해",
 
 // 리뷰 작성 시 선택 가능한 태그
-reviewTags: ["🏠 도훈이 품이 아늑해요", "💗 사랑이 넘쳐요", "✨ 깜찍해요", "🔥 형 마음이 활활 타요", "🫧 도훈이가 보고 싶어요"],
+reviewTags: ["🥰 안아 줘요", "💗 사랑이 넘쳐요", "💋 뽀뽀하고 싶어요", "🔥 마음이 활활 타요", "💊 보고 싶어요"],
 
 // "이런 점이 좋았어요" 통계 배너 (수동 값, 원하면 직접 수정)
 keywordStats: {
-participants: "903회",
-people: "389명",
+participants: "910회",
+people: "2명",
 items: [
-{ emoji: "🏠", label: "도훈이 품이 아늑해요", count: 130 },
-{ emoji: "💗", label: "사랑이 넘쳐요", count: 911 },
-{ emoji: "✨", label: "깜찍해요", count: 486 },
-{ emoji: "🔥", label: "형 마음이 활활 타요", count: 117 },
-{ emoji: "🫧", label: "도훈이가 보고 싶어요", count: 818 }
+{ emoji: "🥰", label: "안아 줘요", count: 486 },
+{ emoji: "💗", label: "사랑이 넘쳐요", count: 908 },
+{ emoji: "💋", label: "뽀뽀하고 싶어요", count: 228 },
+{ emoji: "🔥", label: "마음이 활활 타요", count: 95 },
+{ emoji: "💊", label: "보고 싶어요", count: 97 }
 ]
 },
 
@@ -571,9 +570,9 @@ name: "doh***",
 meta: "리뷰 404 · 사진 228",
 rating: 5,
 visit: "☀️ 아침에 방문 · 예약 없이 이용 · 대기 시간 바로 입장 · 일상 · 혼자",
-text: "이 집 사장님 게으름 손님이 문을 알아서 열고 들어가야 함 친절은 함",
-tags: ["💗 사랑이 넘쳐요", "✨ 깜찍해요", "🔥 형 마음이 활활 타요"],
-dateLabel: "9.11.금 · 1번째 방문 · 영수증"
+text: "테스트",
+tags: ["💗 사랑이 넘쳐요", "💊 보고 싶어요", "🔥 마음이 활활 타요"],
+dateLabel: "9.10.목 · 1번째 방문 · 영수증"
 }
 ],
 
