@@ -790,7 +790,7 @@ const nameInput = document.getElementById('inputName');
 const textInput = document.getElementById('inputText');
 const name = nameInput.value.trim() || "익명****";
 const text = textInput.value.trim();
-document.getElementById('inputDate').value = todayStr();
+
 
 if(!text){
 textInput.focus();
@@ -833,6 +833,7 @@ alert("리뷰 등록에 실패했어요.\n(" + err.message + ")\n네트워크 �
 } finally {
 nameInput.value = "";
 textInput.value = "";
+document.getElementById('inputDate').value = todayStr();
 selectedStars = 0;
 selectedTags.clear();
 [...starPicker.children].forEach(s => s.classList.remove('on'));
