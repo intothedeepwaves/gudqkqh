@@ -243,7 +243,7 @@ background:#fafafa;border:1px solid var(--line);border-radius:14px;padding:16px;
 .write-box h3{margin:0 0 12px;font-size:16px;font-weight:800;}
 .field{margin-bottom:12px;}
 .field label{display:block;font-size:13px;font-weight:700;color:var(--text-sub);margin-bottom:6px;}
-.field input[type=text], .field textarea{
+.field input[type=text], .field input[type=date], .field textarea{
 width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;
 font-size:14px;font-family:inherit;background:#fff;
 }
@@ -288,7 +288,7 @@ font-weight:800;color:#fff;font-size:16px;flex:0 0 auto;
 .review-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
 .review-tags .chip{padding:6px 12px;font-size:12.5px;background:var(--chip-bg);cursor:default;}
 .review-footer{display:flex;align-items:center;justify-content:space-between;font-size:12.5px;color:var(--text-sub);}
-.review-footer .delete-btn{
+.review-footer .date{margin-left:auto;text-align:right;}.review-footer .delete-btn{
 color:#ff5c5c;background:none;border:none;cursor:pointer;font-size:12.5px;font-weight:700;padding:0;
 }
 .empty-state{text-align:center;color:var(--text-sub);font-size:14px;padding:32px 0;}
@@ -450,6 +450,10 @@ font-size:38px;font-weight:900;color:#ff5c8a;letter-spacing:.5px;margin-bottom:8
 <div class="tag-pick" id="tagPick"></div>
 </div>
 <div class="field">
+<label>방문 날짜</label>
+<input type="date" id="inputDate">
+</div>
+<div class="field">
 <label>리뷰 내용</label>
 <textarea id="inputText" placeholder="방문 경험을 자유롭게 남겨주세요."></textarea>
 </div>
@@ -592,7 +596,17 @@ let isAdmin = false;
 
 function initials(name){ return (name || "?").replace(/\*/g,'').slice(0,1).toUpperCase() || "?"; }
 function starString(n){ n = n || 5; return "★".repeat(n) + "☆".repeat(5-n); }
-
+function formatVisitDate(str){
+  // "2026-10-02" -> "10.2.금"
+  const [y, m, d] = str.split('-').map(Number);
+  const days = ['일','월','화','수','목','금','토'];
+  const dow = days[new Date(y, m - 1, d).getDay()];
+  return `${m}.${d}.${dow}`;
+}
+function todayStr(){
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
 function renderStaticText(){
 document.title = STORE.name + " - 리뷰";
 document.getElementById('storeName').textContent = STORE.name;
@@ -666,8 +680,8 @@ ${r.visit ? `<div class="visit-line">${r.visit}</div>` : ""}
 <div class="review-text">${r.text}</div>
 <div class="review-tags">${(r.tags||[]).map(t => `<div class="chip">${t}</div>`).join('')}</div>
 <div class="review-footer">
-<span>${r.dateLabel || ""}</span>
 ${showDelete ? `<button class="delete-btn" data-review-id="${r.id || ''}">🗑 삭제</button>` : ""}
+<span class="date">${r.visitDate ? formatVisitDate(r.visitDate) + (r.visitCount ? ` · ${r.visitCount}번째 방문` : "") : (r.dateLabel || "")}</span>
 </div>
 </div>
 `;
@@ -777,6 +791,7 @@ const nameInput = document.getElementById('inputName');
 const textInput = document.getElementById('inputText');
 const name = nameInput.value.trim() || "익명****";
 const text = textInput.value.trim();
+document.getElementById('inputDate').value = todayStr();
 
 if(!text){
 textInput.focus();
@@ -787,10 +802,15 @@ return;
 const rating = selectedStars || 5;
 const tags = selectedTags.size ? [...selectedTags] : ["🙂 방문 인증"];
 
-const today = new Date();
-const dateLabel = `${today.getMonth()+1}.${today.getDate()} 방금 등록`;
+const visitDate = document.getElementById('inputDate').value || todayStr();
+const dateLabel = formatVisitDate(visitDate);
 
-const newReview = { name, meta: "새 리뷰", rating, visit: "🆕 방금 남긴 리뷰", text, tags, dateLabel };
+// 같은 닉네임으로 남긴 기존 리뷰 수 / 최대 방문 번호 중 큰 값 + 1
+const sameName = reviews.filter(r => (r.name || "").trim() === name);
+const maxVisit = sameName.reduce((mx, r) => Math.max(mx, r.visitCount || 0), 0);
+const visitCount = Math.max(sameName.length, maxVisit) + 1;
+
+const newReview = { name, meta: "새 리뷰", rating, visit: "🆕 방금 남긴 리뷰", text, tags, dateLabel, visitDate, visitCount };
 
 const btn = document.getElementById('submitBtn');
 btn.disabled = true; btn.textContent = "등록 중...";
@@ -889,6 +909,7 @@ if(e.target === notifyModal) notifyModal.classList.remove('open');
 });
 
 /* 초기화 */
+document.getElementById('inputDate').value = todayStr();
 renderStaticText();
 renderCarousel();
 renderReviews();
@@ -909,7 +930,7 @@ firestoreLoaded = true;
 const fetched = list.map(r => ({
 id: r.id,
 name: r.name, meta: r.meta, rating: r.rating,
-visit: r.visit, text: r.text, tags: r.tags, dateLabel: r.dateLabel
+visit: r.visit, text: r.text, tags: r.tags, dateLabel: r.dateLabel, visitDate: r.visitDate, visitCount: r.visitCount
 }));
 // 새로 등록된 리뷰(최신순)를 위에, 처음부터 있던 예시 리뷰를 그 아래에 이어서 보여줍니다.
 reviews = [...fetched, ...STORE.seedReviews];
@@ -919,5 +940,3 @@ renderReviews();
 </script>
 </body>
 </html>
-
-혹시 이거 뭐가 잘못된 거여?
