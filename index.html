@@ -552,16 +552,16 @@ reviewTags: ["🫂 안아 줘요", "💗 사랑이 넘쳐요", "💋 뽀뽀하�
 
 // "이런 점이 좋았어요" 통계 배너 (수동 값, 원하면 직접 수정)
 keywordStats: {
-participants: "910회",
-people: "2명",
+participants: "0회",
+people: "0명",
 items: [
-{ emoji: "🫂", label: "안아 줘요", count: 486 },
-{ emoji: "💗", label: "사랑이 넘쳐요", count: 95 },
-{ emoji: "💋", label: "뽀뽀하고 싶어요", count: 97 },
-{ emoji: "🔥", label: "질투 나요", count: 908 },
-{ emoji: "💊", label: "보고 싶어요", count: 228 }
-{ emoji: "🤍", label: "꿈만 같아요", count: 26 }
-{ emoji: "🪄", label: "보고만 있어도 기분이 좋아져요", count: 910 }
+{ emoji: "🫂", label: "안아 줘요", count: 0 },
+{ emoji: "💗", label: "사랑이 넘쳐요", count: 0 },
+{ emoji: "💋", label: "뽀뽀하고 싶어요", count: 0 },
+{ emoji: "🔥", label: "질투 나요", count: 0 },
+{ emoji: "💊", label: "보고 싶어요", count: 0 },
+{ emoji: "🤍", label: "꿈만 같아요", count: 0 },
+{ emoji: "🪄", label: "보고만 있어도 기분이 좋아져요", count: 0 },
 { emoji: "😣", label: "미워요", count: 0 }
 ]
 },
@@ -641,16 +641,35 @@ document.getElementById('tagPick').innerHTML = STORE.reviewTags.map(t => `
 `).join('');
 
 // keyword bars
-const max = Math.max(...STORE.keywordStats.items.map(k => k.count));
-document.getElementById('keywordList').innerHTML = STORE.keywordStats.items.map(k => `
-<div class="kw-row">
-<div class="fill" style="width:${(k.count/max*100).toFixed(0)}%"></div>
-<span class="label">${k.emoji} "${k.label}"</span>
-<span class="count">${k.count}</span>
-</div>
-`).join('');
+renderKeywords();
 }
 
+function renderKeywords(){
+  // 코드에 적힌 예시 리뷰는 빼고, 실제로 등록된 리뷰만 센다
+  const real = reviews.filter(r => !STORE.seedReviews.includes(r));
+
+  // 위쪽 "N회 N명 참여" (STORE에 적은 숫자를 시작값으로 쓰고, 실제 리뷰를 더함)
+  const baseTimes = parseInt(STORE.keywordStats.participants, 10) || 0;
+  const basePeople = parseInt(STORE.keywordStats.people, 10) || 0;
+  const people = new Set(real.map(r => (r.name || "").trim()));
+  document.getElementById('kwParticipants').textContent = (baseTimes + real.length) + "회";
+  document.getElementById('kwPeople').textContent = (basePeople + people.size) + "명";
+
+  // 태그별 막대
+  const items = STORE.keywordStats.items.map(k => {
+    const tag = `${k.emoji} ${k.label}`;
+    const added = real.filter(r => (r.tags || []).includes(tag)).length;
+    return { ...k, total: k.count + added };
+  });
+  const max = Math.max(...items.map(k => k.total), 1);
+  document.getElementById('keywordList').innerHTML = items.map(k => `
+    <div class="kw-row">
+      <div class="fill" style="width:${(k.total/max*100).toFixed(0)}%"></div>
+      <span class="label">${k.emoji} "${k.label}"</span>
+      <span class="count">${k.total}</span>
+    </div>
+  `).join('');
+}
 function renderCarousel(){
 const track = document.getElementById('carouselTrack');
 const dots = document.getElementById('carouselDots');
@@ -706,6 +725,8 @@ document.getElementById('homeReviewPreview').innerHTML = preview.length
 document.getElementById('allReviewList').innerHTML = list.length
 ? list.map(r => reviewCardHTML(r, { showDelete: true })).join('')
 : `<div class="empty-state">아직 등록된 리뷰가 없어요.<br>첫 리뷰를 남겨보세요!</div>`;
+
+renderKeywords();
 }
 
 /* 관리자 모드 진입/해제 */
